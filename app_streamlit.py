@@ -36,3 +36,11 @@ try:
 except Exception:
     st.warning("SHAP explainer payload not found or failed to load. Creating TreeExplainer from full training data (may be slower).")
     explainer = shap.TreeExplainer(model, X, feature_names=feature_names)
+
+# Compute shap values
+shap_values = explainer.shap_values(sample)
+# For binary classification with tree models shap_values is usually a list: [neg_class, pos_class]
+if isinstance(shap_values, list):
+    shap_for_pos = shap_values[1]  # positive class contributions
+else:
+    shap_for_pos = shap_values
