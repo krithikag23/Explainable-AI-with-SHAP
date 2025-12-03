@@ -44,3 +44,15 @@ if isinstance(shap_values, list):
     shap_for_pos = shap_values[1]  # positive class contributions
 else:
     shap_for_pos = shap_values
+
+# Table of top features
+df = pd.DataFrame({
+    "feature": feature_names,
+    "value": sample.flatten(),
+    "shap": shap_for_pos.flatten()
+}).astype({'feature': str})
+df["abs_shap"] = df["shap"].abs()
+df_sorted = df.sort_values("abs_shap", ascending=False).head(10).drop(columns="abs_shap")
+if show_all:
+    st.subheader("Top 10 features (by absolute SHAP value)")
+    st.table(df_sorted.set_index("feature"))    
