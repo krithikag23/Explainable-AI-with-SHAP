@@ -55,4 +55,29 @@ df["abs_shap"] = df["shap"].abs()
 df_sorted = df.sort_values("abs_shap", ascending=False).head(10).drop(columns="abs_shap")
 if show_all:
     st.subheader("Top 10 features (by absolute SHAP value)")
-    st.table(df_sorted.set_index("feature"))    
+    st.table(df_sorted.set_index("feature"))
+
+# Waterfall / force plot (static fallback)
+if show_waterfall:
+    st.subheader("SHAP waterfall (static fallback)")
+    try:
+        # Preferred: use shap.plots.waterfall if available
+        fig = plt.figure(figsize=(10, 4))
+        try:
+            # shap 0.40+ has shap.plots.waterfall
+            shap.plots.waterfall(explainer.expected_value[1] if isinstance(explainer.expected_value, (list, tuple, np.ndarray)) else explainer.expected_value, shap_for_pos[0], feature_names=feature_names, show=False)
+            st.pyplot(fig)
+        except Exception:
+            # fallback to legacy waterfall or bar plot
+            # Bar plot of top contributions:
+            top = df_sorted.copy()
+            top = top.iloc[::-1]
+            ax = top.plot.barh(x="feature", y="shap", legend=False)
+            ax.set_xlabel("SHAP value (contribution to prediction)")
+            plt.tight_layout()
+            st.pyplot(ax.figure)
+    except Exception as e:
+        st.write("Could not render SHAP waterfall/plot in this environment. Try running locally or see README for interactive instructions.")
+        st.write(str(e))
+
+st.info("Tip: For interactive SHAP force/JS plots, run a Jupyter notebook and use `shap.initjs()` + `shap.plots.force`.")
