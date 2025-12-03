@@ -27,3 +27,4 @@ show_all = st.sidebar.checkbox("Show top 10 SHAP features table", value=True)
 show_waterfall = st.sidebar.checkbox("Show waterfall/force plot", value=True)
 
 sample = X[idx:idx+1]
+
