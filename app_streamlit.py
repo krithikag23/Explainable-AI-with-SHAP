@@ -25,3 +25,5 @@ st.sidebar.header("Select sample and options")
 idx = st.sidebar.number_input("Sample index (0..n-1)", min_value=0, max_value=len(X)-1, value=0)
 show_all = st.sidebar.checkbox("Show top 10 SHAP features table", value=True)
 show_waterfall = st.sidebar.checkbox("Show waterfall/force plot", value=True)
+
+sample = X[idx:idx+1]
