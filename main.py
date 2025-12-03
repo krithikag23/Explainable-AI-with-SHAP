@@ -40,3 +40,6 @@ def train_and_save():
     }
     joblib.dump(explainer_payload, EXPLAINER_PATH)
     print(f"Saved SHAP explainer payload to {EXPLAINER_PATH}")
+
+if __name__ == "__main__":
+    train_and_save()
