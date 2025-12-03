@@ -28,3 +28,11 @@ show_waterfall = st.sidebar.checkbox("Show waterfall/force plot", value=True)
 
 sample = X[idx:idx+1]
 
+# Load SHAP explainer payload
+explainer = None
+try:
+    explainer_payload = joblib.load("shap_explainer.joblib")
+    explainer = shap.TreeExplainer(model, explainer_payload["data_sample"], feature_names=explainer_payload["feature_names"])
+except Exception:
+    st.warning("SHAP explainer payload not found or failed to load. Creating TreeExplainer from full training data (may be slower).")
+    explainer = shap.TreeExplainer(model, X, feature_names=feature_names)
