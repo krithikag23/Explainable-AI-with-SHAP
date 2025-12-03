@@ -17,3 +17,6 @@ try:
 except Exception:
     st.error("Model not found. Please run `python main.py` first to train and save the model.")
     st.stop()
+
+data = load_breast_cancer()
+X, y = data.data, data.target    
